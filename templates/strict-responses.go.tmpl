@@ -1,0 +1,43 @@
+//Generated with strict-responses.tmpl
+
+{{range . -}}
+    {{$hasHeaders := ne 0 (len .Headers) -}}
+    {{$name := .GoName | ucFirst -}}
+    {{if $hasHeaders -}}
+        type {{$name}}RespHeaders struct {
+            {{range .Headers -}}
+                {{.GoName}} {{.Schema.TypeDecl}}
+            {{end -}}
+        }
+    {{end -}}
+
+    {{range .Contents -}}
+        {{if and (not $hasHeaders) (.IsSupported) -}}
+            type {{$name}}{{.NameTagOrContentType}}Resp {{if eq .NameTag "Multipart"}}func(writer *multipart.Writer)error{{else if .IsSupported}}{{if .Schema.IsRef}}={{end}} {{.Schema.TypeDecl}}{{else}}io.Reader{{end}}
+        {{else -}}
+            type {{$name}}{{.NameTagOrContentType}}Resp struct {
+                Body {{if eq .NameTag "Multipart"}}func(writer *multipart.Writer)error{{else if .IsSupported}}{{.Schema.TypeDecl}}{{else}}io.Reader{{end}}
+
+                {{if $hasHeaders -}}
+                    Headers {{$name}}RespHeaders
+                {{end -}}
+
+                {{if not .HasFixedContentType -}}
+                    ContentType string
+                {{end -}}
+
+                {{if not .IsSupported -}}
+                    ContentLength int64
+                {{end -}}
+            }
+        {{end -}}
+    {{end -}}
+
+    {{if eq 0 (len .Contents) -}}
+        type {{$name}}Resp struct {
+            {{if $hasHeaders -}}
+                Headers {{$name}}RespHeaders
+            {{end}}
+        }
+    {{end}}
+{{end -}}
