@@ -1,0 +1,1492 @@
+openapi: 3.0.0
+info:
+  version: "0.0.1"
+  title: turboencabulator
+  description: The Api for the access to turboencabulator
+  contact:
+    name: APISupport
+    url: http://wiki.streem.tech/api/access
+    email: admin@streem.tech
+  # license:
+  #   name: Copyright Streemtech
+  #   identifier: "Copyright"
+
+tags:
+  - name: turboencabulator
+    description: "Related to groups and roles for allowing others to edit and moderate a user's things."
+
+#TODO0 use oneOf and descriminator for codegen.
+#TODO0 replace FT side generation with https://github.com/aiengineer1990/openapi-typescript-codegen
+#TODO1 update operationIDs
+#TODO1 update descriptions
+
+# servers:
+#   - url: access.streem.tech/v1
+#     description: VERSION 1 STREEMTECH API VIA ACCESS SUBDOMAIN
+#   - url: api.streem.tech/v1/access
+#     description: VERSION 1 STREEMTECH API
+# security:
+#   []
+#- UserLogin:
+#  - admin
+#  - user
+#- Basic:
+#  - noauth
+#- Key:
+#  - publicConsumption
+
+paths:
+  /watchers/twitch/eventsub/webhook/{webhook}:
+    post:
+      tags: ["watchers"]
+      operationId: "WatchersTwitchEventsubWebhook"
+      description: |
+        respond to a twitch chat webhook.
+      parameters:
+        - name: webhook
+          in: path
+          description: The ID of the webhook that is being called.
+          required: true
+          schema:
+            type: string
+            x-go-type: uuid.UUID
+            x-go-type-import:
+              name: uuid
+              path: github.com/google/uuid
+
+        - name: Twitch-Eventsub-Message-Id
+          in: header
+          description: A twitch webhook header
+          required: true
+          schema:
+            type: string
+
+        - name: Twitch-Eventsub-Message-Retry
+          in: header
+          description: A twitch webhook header
+          required: false
+          schema:
+            type: string
+
+        - name: Twitch-Eventsub-Message-Type
+          in: header
+          description: A twitch webhook header
+          required: true
+          schema:
+            type: string
+            enum:
+              - notification
+              - webhook_callback_verification
+              - revocation
+            x-enum-descriptions:
+              - An animated emote such as a gif
+              - An animated emote such as a gif
+              - A static emote png file
+            x-enum-varnames:
+              - TwitchMessageTypeNotification
+              - TwitchMessageTypeCallbackVerification
+              - TwitchMessageTypeRevocation
+
+        - name: Twitch-Eventsub-Message-Signature
+          in: header
+          description: A twitch webhook header
+          required: true
+          schema:
+            type: string
+
+        - name: Twitch-Eventsub-Message-Timestamp
+          in: header
+          description: A twitch webhook header
+          required: true
+          schema:
+            type: string
+
+        - name: Twitch-Eventsub-Subscription-Type
+          in: header
+          description: A twitch webhook header
+          required: false
+          schema:
+            type: string
+
+        - name: Twitch-Eventsub-Subscription-Version
+          in: header
+          description: A twitch webhook header
+          required: false
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/twitchWebhookRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/ConfirmResponse"
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /watchers/tiltify:
+    post:
+      tags: ["watchers"]
+      operationId: "WatchersTiltifyWebhook"
+      description: |
+        respond to a twitch chat webhook.
+      parameters:
+        - name: X-Tiltify-Signature
+          in: header
+          description: The signature used to verify the webhook from tiltify
+          required: true
+          schema:
+            type: string
+        - name: X-Tiltify-Timestamp
+          in: header
+          description: The timestamp of the tiltify webhook.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TiltifyDonationRelayBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/ConfirmResponse"
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+components:
+  responses:
+    ConfirmResponse:
+      description: An Empty response body
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+
+    NoContent:
+      description: The request was successful but returned no data.
+    BadRequest:
+      description: This error describes when the request could not be fulfilled. This often happens because of a missing request parameter
+      content:
+        application/json:
+          schema:
+            type: object
+    Unauthorized:
+      description: This error describes when the user needs to be authorized before accessing this resource
+      content:
+        application/json:
+          schema:
+            type: object
+    Forbidden:
+      description: This error describes when the user does not have permission to access a resource
+      content:
+        application/json:
+          schema:
+            type: object
+    NotFound:
+      description: This error describes when a given resource cannot be found. The ID or slug given is most likely incorrect or has changed. For this reason, we recommend using the ID if you have access to it.
+      content:
+        application/json:
+          schema:
+            type: object
+    ServerError:
+      description: This error describes when a something bad happened on our end. You should rarely see these. We'll do our best to fix them, but feel free to bug our CM.
+      content:
+        application/json:
+          schema:
+            type: object
+    MissingSubject:
+      description: This error describes when the client is missing the request subject.
+      content:
+        application/json:
+          schema:
+            type: object
+
+  schemas:
+    # foo:
+    #   description: exists to get the correct version of uuid imported.
+    #   type: object
+    #   properties:
+    #     bat:
+    #       type: string
+    #       x-go-type: uuid.UUID
+    #       x-go-type-import:
+    #         name: uuid
+    #         path: github.com/google/uuid
+    TiltifyDonationRelayBody:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/TiltifyDonationRelayData"
+        meta:
+          $ref: "#/components/schemas/TiltifyDonationRelayMeta"
+    TiltifyDonationRelayData:
+      type: object
+      required:
+        - amount
+        - campaign_id
+        - cause_id
+        - completed_at
+        - created_at
+        - id
+        - payment_status
+      properties:
+        amount:
+          type: object
+          required:
+            - currency
+            - value
+          properties:
+            currency:
+              type: string
+            value:
+              type: string
+        campaign_id:
+          type: string
+        cause_id:
+          type: string
+        completed_at:
+          type: string
+        created_at:
+          type: string
+        donor_comment:
+          type: string
+        donor_name:
+          type: string
+        fundraising_event_id:
+          type: string
+        id:
+          type: string
+        legacy_id:
+          type: integer
+        payment_status:
+          $ref: "#/components/schemas/TiltifyDonationRelayPaymentStatus"
+        poll_id:
+          type: string
+        poll_option_id:
+          type: string
+        reward_custom_question:
+          type: string
+        reward_id:
+          type: string
+        reward_claims:
+          type: array
+          items:
+            $ref: "#/components/schemas/TiltifyDonationRewardClaim"
+        sustained:
+          type: boolean
+        target_id:
+          type: string
+        team_event_id:
+          type: string
+    TiltifyDonationRelayMeta:
+      type: object
+      properties:
+        attempted_at:
+          type: string
+        event_type:
+          type: string
+        generated_at:
+          type: string
+        id:
+          type: string
+        relay_id:
+          type: string
+        relay_key_id:
+          type: string
+        relay_metadata:
+          type: string
+    TiltifyDonationRelayPaymentStatus:
+      description: This is the type of payment statuses that the payment can be
+      type: string
+      enum:
+        - pending
+        - completed
+        - cancelled
+      x-enum-descriptions:
+        - The payment status is still pending
+        - The payment status is completed
+        - The payment status is cancled
+      x-enum-varnames:
+        - PaymentStatusPending
+        - PaymentStatusCompleted
+        - PaymentStatusCancelled
+    TiltifyDonationRewardClaim:
+      type: object
+      required:
+        - id
+        - reward_id
+        - quantity
+      properties:
+        id:
+          type: string
+        reward_id:
+          type: string
+        quantity:
+          type: integer
+
+    twitchWebhookSubscriptionTransport:
+      type: object
+      required:
+        - method
+        - callback
+      properties:
+        method:
+          type: string
+        callback:
+          type: string
+    twitchWebhookSubscriptionCondition:
+      type: object
+      properties:
+        broadcaster_user_id:
+          type: string
+        from_broadcaster_user_id:
+          type: string
+        to_broadcaster_user_id:
+          type: string
+        reward_id:
+          type: string
+        category_id:
+          type: string
+        campaign_id:
+          type: string
+        organization_id:
+          type: string
+        extension_client_id:
+          type: string
+        client_id:
+          type: string
+        user_id:
+          type: string
+        moderator_user_id:
+          type: string
+        broadcaster_id:
+          type: string
+
+    twitchWebhookSubscription:
+      type: object
+      required:
+        - id
+        - type
+        - version
+        - status
+        - cost
+        - condition
+        - created_at
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        type:
+          $ref: "#/components/schemas/EventsubType"
+        version:
+          type: string
+        cost:
+          type: integer
+        condition:
+          $ref: "#/components/schemas/twitchWebhookSubscriptionCondition"
+        transport:
+          $ref: "#/components/schemas/twitchWebhookSubscriptionTransport"
+        created_at:
+          type: string
+
+    twitchWebhookRequestBody:
+      type: object
+      properties:
+        challenge:
+          type: string
+        event:
+          $ref: "#/components/schemas/twitchWebhookEvent"
+        subscription:
+          $ref: "#/components/schemas/twitchWebhookSubscription"
+    twitchWebhookEvent:
+      oneOf:
+        - $ref: "#/components/schemas/TwitchChannelBan"
+        - $ref: "#/components/schemas/TwitchChannelChannelPointsCustomRewardAdd"
+        - $ref: "#/components/schemas/TwitchChannelChannelPointsCustomRewardRedemptionAdd"
+        - $ref: "#/components/schemas/TwitchChannelChannelPointsCustomRewardRedemptionUpdate"
+        - $ref: "#/components/schemas/TwitchChannelChannelPointsCustomRewardRemove"
+        - $ref: "#/components/schemas/TwitchChannelChannelPointsCustomRewardUpdate"
+        - $ref: "#/components/schemas/TwitchChannelCharityCampaignDonate"
+        - $ref: "#/components/schemas/TwitchChannelCheer"
+        - $ref: "#/components/schemas/TwitchChannelFollow"
+        - $ref: "#/components/schemas/TwitchChannelGoalBegin"
+        - $ref: "#/components/schemas/TwitchChannelGoalEnd"
+        - $ref: "#/components/schemas/TwitchChannelGoalProgress"
+        - $ref: "#/components/schemas/TwitchChannelHypeTrainBegin"
+        - $ref: "#/components/schemas/TwitchChannelHypeTrainEnd"
+        - $ref: "#/components/schemas/TwitchChannelHypeTrainProgress"
+        - $ref: "#/components/schemas/TwitchChannelModeratorAdd"
+        - $ref: "#/components/schemas/TwitchChannelModeratorRemove"
+        - $ref: "#/components/schemas/TwitchChannelPollBegin"
+        - $ref: "#/components/schemas/TwitchChannelPollEnd"
+        - $ref: "#/components/schemas/TwitchChannelPollProgress"
+        - $ref: "#/components/schemas/TwitchChannelPredictionBegin"
+        - $ref: "#/components/schemas/TwitchChannelPredictionEnd"
+        - $ref: "#/components/schemas/TwitchChannelPredictionLock"
+        - $ref: "#/components/schemas/TwitchChannelPredictionProgress"
+        - $ref: "#/components/schemas/TwitchChannelRaid"
+        - $ref: "#/components/schemas/TwitchChannelSubscribe"
+        - $ref: "#/components/schemas/TwitchChannelSubscriptionEnd"
+        - $ref: "#/components/schemas/TwitchChannelSubscriptionGift"
+        - $ref: "#/components/schemas/TwitchChannelSubscriptionMessage"
+        - $ref: "#/components/schemas/TwitchChannelUnban"
+        - $ref: "#/components/schemas/TwitchChannelUpdate"
+        - $ref: "#/components/schemas/TwitchDropEntitlementGrant"
+        - $ref: "#/components/schemas/TwitchExtensionBitsTransactionCreate"
+        - $ref: "#/components/schemas/TwitchStreamOffline"
+        - $ref: "#/components/schemas/TwitchStreamOnline"
+        - $ref: "#/components/schemas/TwitchUserAuthorizationGrant"
+        - $ref: "#/components/schemas/TwitchUserAuthorizationRevoke"
+        - $ref: "#/components/schemas/TwitchUserUpdate"
+        - $ref: "#/components/schemas/TwitchAutomodMessageHold"
+        - $ref: "#/components/schemas/TwitchAutomodMessageUpdate"
+        - $ref: "#/components/schemas/TwitchAutomodSettingsUpdate"
+        - $ref: "#/components/schemas/TwitchAutomodTermsUpdate"
+        - $ref: "#/components/schemas/TwitchChannelAdBreakBegin"
+        - $ref: "#/components/schemas/TwitchChannelChannelPointsAutomaticRewardAdd"
+        - $ref: "#/components/schemas/TwitchChannelChatClear"
+        - $ref: "#/components/schemas/TwitchChannelChatClearUserMessages"
+        - $ref: "#/components/schemas/TwitchChannelChatMessage"
+        - $ref: "#/components/schemas/TwitchChannelChatMessageDelete"
+        - $ref: "#/components/schemas/TwitchChannelChatNotification"
+        - $ref: "#/components/schemas/TwitchChannelChatUserMessageHold"
+        - $ref: "#/components/schemas/TwitchChannelChatUserMessageUpdate"
+        - $ref: "#/components/schemas/TwitchChannelChatSettingsUpdate"
+        - $ref: "#/components/schemas/TwitchChannelGuestStarGuestUpdate"
+        - $ref: "#/components/schemas/TwitchChannelGuestStarSessionBegin"
+        - $ref: "#/components/schemas/TwitchChannelGuestStarSessionEnd"
+        - $ref: "#/components/schemas/TwitchChannelGuestStarSettingsUpdate"
+        - $ref: "#/components/schemas/TwitchChannelModerate"
+        - $ref: "#/components/schemas/TwitchChannelUnbanRequestCreate"
+        - $ref: "#/components/schemas/TwitchChannelUnbanRequestResolve"
+        - $ref: "#/components/schemas/TwitchChannelVipAdd"
+        - $ref: "#/components/schemas/TwitchChannelVipRemove"
+        - $ref: "#/components/schemas/TwitchChannelUserWhisperMessage"
+        - $ref: "#/components/schemas/TwitchChannelCharityCampaignProgress"
+        - $ref: "#/components/schemas/TwitchChannelCharityCampaignStart"
+        - $ref: "#/components/schemas/TwitchChannelCharityCampaignStop"
+        - $ref: "#/components/schemas/TwitchChannelShieldModeBegin"
+        - $ref: "#/components/schemas/TwitchChannelShieldModeEnd"
+        - $ref: "#/components/schemas/TwitchChannelShoutoutCreate"
+        - $ref: "#/components/schemas/TwitchChannelShoutoutReceive"
+        - $ref: "#/components/schemas/TwitchChannelSuspiciousUserMessage"
+        - $ref: "#/components/schemas/TwitchChannelSuspiciousUserUpdate"
+
+    EventsubType:
+      description: This is the list of raw eventsub types that twitch provides.
+      type: string
+      enum:
+        - channel.update
+        - channel.follow
+        - channel.subscribe
+        - channel.subscription.end
+        - channel.subscription.gift
+        - channel.subscription.message
+        - channel.cheer
+        - channel.raid
+        - channel.ban
+        - channel.unban
+        - channel.moderator.add
+        - channel.moderator.remove
+        - channel.channel_points_custom_reward.add
+        - channel.channel_points_custom_reward.update
+        - channel.channel_points_custom_reward.remove
+        - channel.channel_points_custom_reward_redemption.add
+        - channel.channel_points_custom_reward_redemption.update
+        - channel.poll.begin
+        - channel.poll.progress
+        - channel.poll.end
+        - channel.prediction.begin
+        - channel.prediction.progress
+        - channel.prediction.lock
+        - channel.prediction.end
+        - channel.charity_campaign.donate
+        - drop.entitlement.grant
+        - extension.bits_transaction.create
+        - channel.goal.begin
+        - channel.goal.progress
+        - channel.goal.end
+        - channel.hype_train.begin
+        - channel.hype_train.progress
+        - channel.hype_train.end
+        - stream.online
+        - stream.offline
+        - user.authorization.grant
+        - user.authorization.revoke
+        - user.update
+        - automod.message.hold
+        - automod.message.update
+        - automod.settings.update
+        - automod.terms.update
+        - channel.ad_break.begin
+        - channel.chat.clear
+        - channel.chat.clear_user_messages
+        - channel.chat.message
+        - channel.chat.message_delete
+        - channel.chat.notification
+        - channel.chat_settings.update
+        - channel.chat.user_message_hold
+        - channel.chat.user_message_update
+        - channel.unban_request.create
+        - channel.unban_request.resolve
+        - channel.moderate
+        - channel.guest_star_session.begin
+        - channel.guest_star_session.end
+        - channel.guest_star_guest.update
+        - channel.guest_star_settings.update
+        - channel.channel_points_automatic_reward.add
+        - channel.vip.add
+        - channel.vip.remove
+        - user.whisper.message
+        - channel.charity_campaign.start
+        - channel.charity_campaign.progress
+        - channel.charity_campaign.stop
+        - channel.shield_mode.begin
+        - channel.shield_mode.end
+        - channel.shoutout.create
+        - channel.shoutout.receive
+        - channel.suspicious_user.message
+        - channel.suspicious_user.update
+
+    TwitchChannelBan:
+      type: object
+    TwitchChannelChannelPointsCustomRewardAdd:
+      type: object
+    TwitchChannelChannelPointsCustomRewardRedemptionAdd:
+      type: object
+      properties:
+        id:
+          type: string
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        user_id:
+          type: string
+        user_login:
+          type: string
+        user_name:
+          type: string
+        user_input:
+          type: string
+        status:
+          type: string
+        reward:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            cost:
+              type: integer
+            prompt:
+              type: string
+          required:
+            - id
+            - title
+            - cost
+            - prompt
+        redeemed_at:
+          type: string
+      required:
+        - id
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+        - user_id
+        - user_login
+        - user_name
+        - user_input
+        - status
+        - reward
+        - redeemed_at
+    TwitchChannelChannelPointsCustomRewardRedemptionUpdate:
+      type: object
+    TwitchChannelChannelPointsCustomRewardRemove:
+      type: object
+    TwitchChannelChannelPointsCustomRewardUpdate:
+      type: object
+    TwitchChannelCharityCampaignDonate:
+      type: object
+    TwitchChannelCheer:
+      type: object
+      properties:
+        is_anonymous:
+          type: boolean
+        user_id:
+          type: string
+        user_login:
+          type: string
+        user_name:
+          type: string
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        message:
+          type: string
+        bits:
+          type: integer
+          format: int
+      required:
+        - is_anonymous
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+        - message
+        - bits
+    TwitchChannelFollow:
+      type: object
+      properties:
+        user_id:
+          type: string
+        user_login:
+          type: string
+        user_name:
+          type: string
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        followed_at:
+          type: string
+      required:
+        - user_id
+        - user_login
+        - user_name
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+        - followed_at
+    TwitchChannelGoalBegin:
+      type: object
+    TwitchChannelGoalEnd:
+      type: object
+    TwitchChannelGoalProgress:
+      type: object
+    TwitchChannelHypeTrainBegin:
+      type: object
+    TwitchChannelHypeTrainEnd:
+      type: object
+    TwitchChannelHypeTrainProgress:
+      type: object
+    TwitchChannelModeratorAdd:
+      type: object
+    TwitchChannelModeratorRemove:
+      type: object
+    TwitchChannelPollBegin:
+      type: object
+    TwitchChannelPollEnd:
+      type: object
+    TwitchChannelPollProgress:
+      type: object
+    TwitchChannelPredictionBegin:
+      type: object
+    TwitchChannelPredictionEnd:
+      type: object
+    TwitchChannelPredictionLock:
+      type: object
+    TwitchChannelPredictionProgress:
+      type: object
+    TwitchChannelRaid:
+      type: object
+    TwitchChannelSubscribe:
+      type: object
+      properties:
+        user_id:
+          type: string
+        user_login:
+          type: string
+        user_name:
+          type: string
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        tier:
+          type: string
+        is_gift:
+          type: boolean
+      required:
+        - user_id
+        - user_login
+        - user_name
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+        - tier
+        - is_gift
+    TwitchChannelSubscriptionEnd:
+      type: object
+    TwitchChannelSubscriptionGift:
+      type: object
+      properties:
+        is_anonymous:
+          type: boolean
+        user_id:
+          type: string
+        user_login:
+          type: string
+        user_name:
+          type: string
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        tier:
+          type: string
+        total:
+          type: integer
+          format: int
+        cumulative_total:
+          type: integer
+          format: int
+      required:
+        - is_anonymous
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+        - tier
+        - total
+    TwitchChannelSubscriptionMessage:
+      type: object
+      properties:
+        user_id:
+          type: string
+        user_login:
+          type: string
+        user_name:
+          type: string
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        tier:
+          type: string
+        cumulative_months:
+          type: integer
+          format: int
+        streak_months:
+          type: integer
+          format: int
+        duration_months:
+          type: integer
+          format: int
+        message:
+          $ref: "#/components/schemas/TwitchChannelSubscriptionMessageMessage"
+      required:
+        - user_id
+        - user_login
+        - user_name
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+        - tier
+        - cumulative_months
+        - duration_months
+        - message
+    TwitchChannelSubscriptionMessageMessage:
+      type: object
+      required:
+        - text
+        - emotes
+      properties:
+        text:
+          type: string
+        emotes:
+          type: array
+          items:
+            $ref: "#/components/schemas/TwitchChannelSubscriptionMessageEmote"
+    TwitchChannelSubscriptionMessageEmote:
+      type: object
+      required:
+        - beginning
+        - end
+        - id
+      properties:
+        beginning:
+          type: integer
+          format: int
+        end:
+          type: integer
+          format: int
+        id:
+          type: string
+    TwitchChannelUnban:
+      type: object
+    TwitchChannelUpdate:
+      type: object
+    TwitchDropEntitlementGrant:
+      type: object
+    TwitchExtensionBitsTransactionCreate:
+      type: object
+    TwitchStreamOffline:
+      type: object
+      properties:
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+      required:
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+    TwitchStreamOnline:
+      type: object
+      properties:
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        type:
+          type: string
+          enum:
+            - live
+            - playlist
+            - watch_party
+            - premiere
+            - rerun
+          x-enum-varnames:
+            - TwitchStreamOnlineTypeLive
+            - TwitchStreamOnlineTypePlaylist
+            - TwitchStreamOnlineTypeWatchParty
+            - TwitchStreamOnlineTypePremiere
+            - TwitchStreamOnlineTypeRerun
+        started_at:
+          type: string
+        id:
+          type: string
+      required:
+        - broadcaster_user_id
+        - broadcaster_user_login
+        - broadcaster_user_name
+        - type
+        - started_at
+        - id
+    TwitchUserAuthorizationGrant:
+      type: object
+    TwitchUserAuthorizationRevoke:
+      type: object
+    TwitchUserUpdate:
+      type: object
+    TwitchAutomodMessageHold:
+      type: object
+    TwitchAutomodMessageUpdate:
+      type: object
+    TwitchAutomodSettingsUpdate:
+      type: object
+    TwitchAutomodTermsUpdate:
+      type: object
+    TwitchChannelAdBreakBegin:
+      type: object
+    TwitchChannelChannelPointsAutomaticRewardAdd:
+      type: object
+    TwitchChannelChatClear:
+      type: object
+    TwitchChannelChatClearUserMessages:
+      type: object
+    TwitchChannelChatMessage:
+      type: object
+      properties:
+        broadcaster_user_id:
+          type: string
+        broadcaster_user_login:
+          type: string
+        broadcaster_user_name:
+          type: string
+        chatter_user_id:
+          type: string
+        chatter_user_login:
+          type: string
+        chatter_user_name:
+          type: string
+        message_id:
+          type: string
+        message:
+          type: object
+          properties:
+            text:
+              type: string
+            fragments:
+              type: array
+              items:
+                $ref: "#/components/schemas/TwitchFragment"
+        color:
+          type: string
+        badges:
+          type: array
+          items:
+            $ref: "#/components/schemas/TwitchBadge"
+        message_type:
+          type: string
+        cheer:
+          type: object
+          properties:
+            bits:
+              type: integer
+        reply:
+          $ref: "#/components/schemas/TwitchMessageReply"
+        channel_points_custom_reward_id:
+          type: string
+
+    TwitchChannelChatMessageDelete:
+      type: object
+    TwitchChannelChatNotification:
+      type: object
+    TwitchChannelChatUserMessageHold:
+      type: object
+    TwitchChannelChatUserMessageUpdate:
+      type: object
+    TwitchChannelChatSettingsUpdate:
+      type: object
+    TwitchChannelGuestStarGuestUpdate:
+      type: object
+    TwitchChannelGuestStarSessionBegin:
+      type: object
+    TwitchChannelGuestStarSessionEnd:
+      type: object
+    TwitchChannelGuestStarSettingsUpdate:
+      type: object
+    TwitchChannelModerate:
+      type: object
+    TwitchChannelUnbanRequestCreate:
+      type: object
+    TwitchChannelUnbanRequestResolve:
+      type: object
+    TwitchChannelVipAdd:
+      type: object
+    TwitchChannelVipRemove:
+      type: object
+    TwitchChannelUserWhisperMessage:
+      type: object
+    TwitchChannelCharityCampaignProgress:
+      type: object
+    TwitchChannelCharityCampaignStart:
+      type: object
+    TwitchChannelCharityCampaignStop:
+      type: object
+    TwitchChannelShieldModeBegin:
+      type: object
+    TwitchChannelShieldModeEnd:
+      type: object
+    TwitchChannelShoutoutCreate:
+      type: object
+    TwitchChannelShoutoutReceive:
+      type: object
+    TwitchChannelSuspiciousUserMessage:
+      type: object
+    TwitchChannelSuspiciousUserUpdate:
+      type: object
+
+    #########################################
+    # Non Webhook Types for envent requests #
+    #########################################
+
+    TwitchBadge:
+      type: object
+      properties:
+        set_id:
+          type: string
+        id:
+          type: string
+        info:
+          type: string
+    TwitchFragment:
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/TwitchMessageFragmentType"
+        text:
+          type: string
+        cheermote:
+          $ref: "#/components/schemas/TwitchCheermote"
+        emote:
+          $ref: "#/components/schemas/TwitchEmote"
+        mention:
+          $ref: "#/components/schemas/TwitchMessageMention"
+    TwitchCheermote:
+      type: object
+      properties:
+        prefix:
+          type: string
+        bits:
+          type: integer
+        tier:
+          type: integer
+    TwitchEmote:
+      type: object
+      properties:
+        id:
+          type: string
+        emote_set_id:
+          type: string
+        owner_id:
+          type: string
+        format:
+          type: array
+          items:
+            $ref: "#/components/schemas/TwitchEmoteFormatType"
+    TwitchEmoteFormatType:
+      type: string
+      enum:
+        - animated
+        - static
+      x-enum-descriptions:
+        - An animated emote such as a gif
+        - A static emote png file
+      x-enum-varnames:
+        - EmoteFormatAnimated
+        - EmoteFormatStatic
+
+    TwitchMessageFragmentType:
+      type: string
+      enum:
+        - text
+        - cheermote
+        - emote
+        - mention
+      x-enum-descriptions:
+        - A simple string of text
+        - A bits emote
+        - A standard emote
+        - Mentioning another user
+      x-enum-varnames:
+        - FragmentTypeText
+        - FragmentTypeCheermote
+        - FragmentTypeEmote
+        - FragmentTypeMention
+    TwitchMessageMention:
+      type: object
+      properties:
+        user_id:
+          type: string
+        user_name:
+          type: string
+        user_login:
+          type: string
+    TwitchMessageReply:
+      type: object
+      properties:
+        parent_message_id:
+          type: string
+        parent_message_body:
+          type: string
+        parent_user_id:
+          type: string
+        parent_user_name:
+          type: string
+        parent_user_login:
+          type: string
+        thread_message_id:
+          type: string
+        thread_user_id:
+          type: string
+        thread_user_name:
+          type: string
+        thread_user_login:
+          type: string
+    TwitchEventsubWorkRequestObject:
+      type: object
+      required:
+        - EventsubType
+        - Condition
+      properties:
+        EventsubType:
+          $ref: "#/components/schemas/EventsubType"
+        Condition:
+          $ref: "#/components/schemas/twitchWebhookSubscriptionCondition"
+
+    DiscordChatSendMessage:
+      description: |
+        Allows the sending of a discord chat message through discord's api.
+        The one downside is that files can not be sent to discord through this method.
+      type: object
+      required:
+        - TurboencabulatorAccountUUID
+        - ChannelID
+        - UUID
+      properties:
+        UUID:
+          type: string
+          description: |
+            This is a unique ID assigned to this message such that, even if processed multiple times, it will not be sent multiple times.
+            This makes sure that no message ends up spamming the destination channel so long as it is not intentionally sent multiple times.
+            This value is set automatically by the watchers queues tooling if not manually set.
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+        TurboencabulatorAccountUUID:
+          type: string
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+          description: |
+            This is the ID used to verify that the user has permission to send to the given server
+        ChannelID:
+          type: string
+        Message:
+          type: string
+        Complex:
+          type: object
+          x-go-type: discordgo.MessageSend
+          x-go-type-import:
+            name: discordgo
+            path: github.com/bwmarrin/discordgo
+        Timeout:
+          type: string
+          x-go-type: time.Time
+          description: |
+            A timeout can be provided to prevent a message from being processed after a certain period of time.
+            This allows messages to be re-sent after being sent to the dead-letter queue without worry for them being stale.
+            Timeouts are not set automatically.
+    TwitchChatSendMessage:
+      description: |
+        Allows the sending of a twitch chat message through the twitch api.
+
+        Send chat message has 3 methods of sending data to the user based on the provided sender and destination(broadcaster) IDs.
+        Atleast 1 of the two provided IDs must be a turboencabulator ID.
+        Should the broadcaster ID be a turboencabulator ID, the sender ID must be one of the approved list of bots, and the broadcasterID must have provided the channel:bot scope.
+        Should the senderID be the turboencabulator UUID, the user access token is used. The sender must provide the user:write:chat scope.
+        Should both be turboencabulator IDs, the sender must provide the user:bot, user:write:chat scopes, and the destination the channel:bot scopes.
+        There is a fallback for sending to both however. 
+
+        Should any of the requires scopes not exist, the broadcaster's User ID will be checked for existance and used as the destination.
+        The sender will just need to have provided the user:write:chat scope.
+      type: object
+      required:
+        - UUID
+        - Message
+        - SenderID
+        - BroadcasterID
+      properties:
+        UUID:
+          type: string
+          description: |
+            This is a unique ID assigned to this message such that, even if processed multiple times, it will not be sent multiple times.
+            This makes sure that no message ends up spamming the destination channel so long as it is not intentionally sent multiple times.
+            This value is set automatically by the watchers queues tooling if not manually set.
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+        Message:
+          type: string
+        ReplyID:
+          type: string
+        SenderID:
+          $ref: "#/components/schemas/TwitchAccountNameTurboUUID"
+        BroadcasterID:
+          $ref: "#/components/schemas/TwitchAccountNameTurboUUID"
+        BypassRateLimit:
+          type: boolean
+          description: |
+            Setting this value to true will bypass the basic chat rate limits. 
+            This will not bypass the emergency anti-spam rate limits.
+            This setting should only be used by important administrative messages such as the pollster poll stop message.
+        ForceUserAccessToken:
+          type: boolean
+          x-go-type: bool
+          description: |
+            Setting this to true will only effect chat messages sent where both SenderID and BroadcasterID are turboencabulator UUIDs.
+            Under normal circumstances, this case will use the app access token, which requires the user:bot scope from the chatting user, and the channel:bot scope from the receiving user.
+            This is undesired under some circumstances as the user may be specifying the channel directly via
+        Timeout:
+          type: string
+          x-go-type: time.Time
+          description: |
+            A timeout can be provided to prevent a message from being processed after a certain period of time.
+            This allows messages to be re-sent after being sent to the dead-letter queue without worry for them being stale.
+            Timeouts are not set automatically.
+    TwitchAccountNameTurboUUID:
+      type: object
+      properties:
+        TwitchDisplayName:
+          type: string
+          description: |
+            This is the display name that the user has on twitch
+        TwitchUserID:
+          type: string
+          description: |
+            This is an optional parameter that allows the user to set the channel name they wish to send to directly.
+            Using this
+        TurboencabulatorAccountUUID:
+          type: string
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+          description: |
+            This is an optional parameter that allows the user to set the channel name they wish to send to directly.
+            Using this would normally require users provide the user:bot & channel:bot scopes. This is
+    ImportMock:
+      type: object
+      description: This is a workarround for imports not properly importing, and getting the wrong type.
+      properties:
+        goTwitchIRC:
+          type: object
+          x-go-type: twitch.PrivateMessage
+          x-go-type-import:
+            name: twitch
+            path: github.com/gempir/go-twitch-irc/v2
+        uuid:
+          type: string
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
+
+    TwitchChatMessage:
+      type: object
+      x-go-type: twitch.PrivateMessage
+      x-go-type-import:
+        path: github.com/gempir/go-twitch-irc/v2
+        name: twitch
+    TwitchChatWhisper:
+      type: object
+      x-go-type: twitch.WhisperMessage
+      x-go-type-import:
+        path: github.com/gempir/go-twitch-irc/v2
+        name: twitch
+    TwitchChatClearchat:
+      type: object
+      x-go-type: twitch.ClearChatMessage
+      x-go-type-import:
+        path: github.com/gempir/go-twitch-irc/v2
+        name: twitch
+    TwitchChatNotice:
+      type: object
+      x-go-type: twitch.NoticeMessage
+      x-go-type-import:
+        path: github.com/gempir/go-twitch-irc/v2
+        name: twitch
+    TwitchChatUsernotice:
+      type: object
+      x-go-type: twitch.UserNoticeMessage
+      x-go-type-import:
+        path: github.com/gempir/go-twitch-irc/v2
+        name: twitch
+    SendTwitchChatMessage:
+      type: object
+      required:
+        - Message
+      properties:
+        Message:
+          type: string
+    SendTwitchChatWhisper:
+      type: object
+
+    #################
+    # Request Types #
+    #################
+    # These types are the types used to identify the information needed for a
+    #
+    BroadcasterUserID:
+      type: object
+      required:
+        - BroadcasterUserId
+      properties:
+        BroadcasterUserId:
+          type: string
+    BroadcasterID:
+      type: object
+      required:
+        - BroadcasterId
+      properties:
+        BroadcasterId:
+          type: string
+    BroadcasterUserIDModeratorUserID:
+      type: object
+      required:
+        - BroadcasterUserId
+        - ModeratorUserId
+      properties:
+        BroadcasterUserId:
+          type: string
+        ModeratorUserId:
+          type: string
+    BroadcasterUserIDUserID:
+      type: object
+      required:
+        - BroadcasterUserId
+        - UserId
+      properties:
+        BroadcasterUserId:
+          type: string
+        UserId:
+          type: string
+    ClientID:
+      type: object
+      required:
+        - ClientId
+      properties:
+        ClientId:
+          type: string
+    UserID:
+      type: object
+      required:
+        - UserId
+      properties:
+        UserId:
+          type: string
+    DropEntitlement:
+      type: object
+      required:
+        - OrganizationId
+        - CategoryId
+        - CampaignId
+      properties:
+        OrganizationId:
+          type: string
+        CategoryId:
+          type: string
+        CampaignId:
+          type: string
+    ExtensionClientID:
+      type: object
+      required:
+        - ExtensionClientId
+      properties:
+        ExtensionClientId:
+          type: string
+    FromToBroadcasterUserID:
+      type: object
+      required:
+        - FromBroadcasterUserId
+        - ToBroadcasterUserId
+      properties:
+        FromBroadcasterUserId:
+          type: string
+        ToBroadcasterUserId:
+          type: string
+
+    BroadcasterUserIDRewardID:
+      type: object
+      required:
+        - BroadcasterUserId
+        - RewardId
+      properties:
+        BroadcasterUserId:
+          type: string
+        RewardId:
+          type: string
+    TiltifyCampaign:
+      type: object
+      required:
+        - CampaignId
+      properties:
+        CampaignId:
+          type: string
+    TwitchChannel:
+      type: object
+      required:
+        - Channel
+      properties:
+        Channel:
+          type: string
+    TwitchChannelBot:
+      type: object
+      required:
+        - Channel
+        - Bot
+      properties:
+        Channel:
+          type: string
+        Bot:
+          type: string
+
+    TwitchChatUser:
+      type: object
+      required:
+        - ID
+        - Name
+        - DisplayName
+        - Color
+        - Badges
+      properties:
+        ID:
+          type: string
+        Name:
+          type: string
+        DisplayName:
+          type: string
+        Color:
+          type: string
+        Badges:
+          type: object
+          additionalProperties:
+            type: number
+            x-go-type: int
+    RailsHeadersData:
+      type: object
+      description: |
+        This is the object that gets passed to the send parameter to encode specific headers as required. 
+        These headers MAY be used for destination sorting, but normally should not be.
+
+      properties:
+        TwitchEventsubMessageTimestamp:
+          type: string
+        TwitchEventsubMessageId:
+          type: string
+        DiscordAppID:
+          type: string
+        DiscordGuildID:
+          type: string
+        DiscordUserID:
+          type: string
+        DiscordChannelID:
+          type: string
+        DiscordRuleID:
+          type: string
+        DiscordRoleID:
+          type: string
+        DiscordEventID:
+          type: string
+        DiscordInteractionID:
+          type: string
+        DiscordMessageID:
+          type: string
+        DiscordStageID:
+          type: string
+        DiscordThreadID:
+          type: string
