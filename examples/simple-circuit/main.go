@@ -1,32 +1,3 @@
-# Twitch API
-
-This is a golang twitch api client generated off of the [Twitch API Swagger](https://github.com/DmitryScaletta/twitch-api-swagger) by DmitryScaletta. It also generates a matching circuit wrapper via the [twitchtv/circuitgen](github.com/twitchtv/circuitgen) package.
-
-## Correctness
-
-This api is only as correct as the generated swagger files it is generating off of.
-
-- If there is something missing that is in the swagger, please file a ticket [here](https://github.com/streemtech/twitchApi/issues/new) so that the api can be re-generated.
-- If there is something incorrect or missing from the swagger, please file a ticket [here](https://github.com/DmitryScaletta/twitch-api-swagger/issues/new) so that the swagger can be corrected to generate properly
-
-Under some circumstances, it may be necessary to file a ticket on the twitch api github issues.
-
-Given this library may have lacking support for IE certain enums, or be incorrect in some circumstances due to how it is created from the documentation, You may wish to examine [nicklaw5/helix](https://github.com/nicklaw5/helix) which is hand-written, has few dependencies, and has strong tests for its endpoints if those are important to you.
-
-## Updating
-
-To update the api, simply re-run `make gen` to pull in the latest changes to the swagger file and update the library.
-
-## License
-
-This library is operating under an MIT license, nonwithstanding the license of github.com/DmitryScaletta/twitch-api-swagger (MIT license in the package.json file) and the license of the twitch api docs that the code is generated off of.
-
-## Usage
-
-The following is copied from examples/simple-circuit, but serves as a basic example on how to construct the client, its associated circuit, and make a request to the twitch api.
-
-```go
-
 package main
 
 import (
@@ -100,5 +71,3 @@ func main() {
 	log.Printf("Sent message, got ID %s", resp.JSON200.GetData()[0].MessageId)
 
 }
-
-```
