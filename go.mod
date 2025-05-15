@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/cep21/circuit/v3 v3.1.0
 	github.com/deepmap/oapi-codegen/v2 v2.1.0
-	github.com/getkin/kin-openapi v0.123.0
+	github.com/getkin/kin-openapi v0.131.0
 	github.com/go-json-experiment/json v0.0.0-20250103021031-ec932d8e20fe
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/rjeczalik/interfaces v0.3.0
@@ -56,6 +56,8 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
+	github.com/oasdiff/yaml v0.0.0-20250309154309-f31be36b4037 // indirect
+	github.com/oasdiff/yaml3 v0.0.0-20250309153720-d2182401db90 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.35.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.9 // indirect
