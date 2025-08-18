@@ -48,6 +48,7 @@ func main() {
 				ForcedClosed: true,
 			},
 		},
+		Prefix: "TwitchApiCircuit.",
 	})
 	if err != nil {
 		log.Printf("failed to wrap client with circuit: %s", err.Error())
