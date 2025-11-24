@@ -202,6 +202,8 @@ type CircuitWrapperClientWithResponsesCircuitConfig struct {
 	CircuitGetGuestStarSessionWithResponse circuit.Config
 	// CircuitGetHypeTrainEventsWithResponse is the configuration used for the GetHypeTrainEventsWithResponse circuit. This overrides values set by Defaults
 	CircuitGetHypeTrainEventsWithResponse circuit.Config
+	// CircuitGetHypeTrainStatusWithResponse is the configuration used for the GetHypeTrainStatusWithResponse circuit. This overrides values set by Defaults
+	CircuitGetHypeTrainStatusWithResponse circuit.Config
 	// CircuitGetModeratedChannelsWithResponse is the configuration used for the GetModeratedChannelsWithResponse circuit. This overrides values set by Defaults
 	CircuitGetModeratedChannelsWithResponse circuit.Config
 	// CircuitGetModeratorsWithResponse is the configuration used for the GetModeratorsWithResponse circuit. This overrides values set by Defaults
@@ -563,6 +565,8 @@ type CircuitWrapperClientWithResponsesCircuit struct {
 	CircuitGetGuestStarSessionWithResponse *circuit.Circuit
 	// CircuitGetHypeTrainEventsWithResponse is the circuit for method GetHypeTrainEventsWithResponse
 	CircuitGetHypeTrainEventsWithResponse *circuit.Circuit
+	// CircuitGetHypeTrainStatusWithResponse is the circuit for method GetHypeTrainStatusWithResponse
+	CircuitGetHypeTrainStatusWithResponse *circuit.Circuit
 	// CircuitGetModeratedChannelsWithResponse is the circuit for method GetModeratedChannelsWithResponse
 	CircuitGetModeratedChannelsWithResponse *circuit.Circuit
 	// CircuitGetModeratorsWithResponse is the circuit for method GetModeratorsWithResponse
@@ -1201,6 +1205,11 @@ func NewCircuitWrapperClientWithResponsesCircuit(
 	}
 
 	w.CircuitGetHypeTrainEventsWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.GetHypeTrainEventsWithResponse", conf.CircuitGetHypeTrainEventsWithResponse, conf.Defaults)
+	if err != nil {
+		return nil, err
+	}
+
+	w.CircuitGetHypeTrainStatusWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.GetHypeTrainStatusWithResponse", conf.CircuitGetHypeTrainStatusWithResponse, conf.Defaults)
 	if err != nil {
 		return nil, err
 	}
@@ -4369,6 +4378,37 @@ func (w *CircuitWrapperClientWithResponsesCircuit) GetHypeTrainEventsWithRespons
 	err := w.CircuitGetHypeTrainEventsWithResponse.Run(ctx, func(ctx context.Context) error {
 		var err error
 		r0, err = w.ClientWithResponsesInterface.GetHypeTrainEventsWithResponse(ctx, p1, p2...)
+
+		if w.ShouldSkipError(err) {
+			skippedErr = err
+			return nil
+		}
+
+		if w.IsBadRequest(err) {
+			return &circuit.SimpleBadRequest{Err: err}
+		}
+		return err
+	})
+
+	if skippedErr != nil {
+		err = skippedErr
+	}
+
+	if berr, ok := err.(*circuit.SimpleBadRequest); ok {
+		err = berr.Err
+	}
+
+	return r0, err
+}
+
+// GetHypeTrainStatusWithResponse calls the embedded ClientWithResponsesInterface's method GetHypeTrainStatusWithResponse with CircuitGetHypeTrainStatusWithResponse
+func (w *CircuitWrapperClientWithResponsesCircuit) GetHypeTrainStatusWithResponse(ctx context.Context, p1 *GetHypeTrainStatusParams, p2 ...RequestEditorFn) (*GetHypeTrainStatusHTTPResponse, error) {
+	var r0 *GetHypeTrainStatusHTTPResponse
+	var skippedErr error
+
+	err := w.CircuitGetHypeTrainStatusWithResponse.Run(ctx, func(ctx context.Context) error {
+		var err error
+		r0, err = w.ClientWithResponsesInterface.GetHypeTrainStatusWithResponse(ctx, p1, p2...)
 
 		if w.ShouldSkipError(err) {
 			skippedErr = err

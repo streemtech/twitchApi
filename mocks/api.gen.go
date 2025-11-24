@@ -6628,6 +6628,80 @@ func (_c *Api_GetHypeTrainEventsWithResponse_Call) RunAndReturn(run func(context
 	return _c
 }
 
+// GetHypeTrainStatusWithResponse provides a mock function with given fields: ctx, params, reqEditors
+func (_m *Api) GetHypeTrainStatusWithResponse(ctx context.Context, params *twitchApi.GetHypeTrainStatusParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.GetHypeTrainStatusHTTPResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, params)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetHypeTrainStatusWithResponse")
+	}
+
+	var r0 *twitchApi.GetHypeTrainStatusHTTPResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.GetHypeTrainStatusParams, ...twitchApi.RequestEditorFn) (*twitchApi.GetHypeTrainStatusHTTPResponse, error)); ok {
+		return rf(ctx, params, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.GetHypeTrainStatusParams, ...twitchApi.RequestEditorFn) *twitchApi.GetHypeTrainStatusHTTPResponse); ok {
+		r0 = rf(ctx, params, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*twitchApi.GetHypeTrainStatusHTTPResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *twitchApi.GetHypeTrainStatusParams, ...twitchApi.RequestEditorFn) error); ok {
+		r1 = rf(ctx, params, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Api_GetHypeTrainStatusWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetHypeTrainStatusWithResponse'
+type Api_GetHypeTrainStatusWithResponse_Call struct {
+	*mock.Call
+}
+
+// GetHypeTrainStatusWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - params *twitchApi.GetHypeTrainStatusParams
+//   - reqEditors ...twitchApi.RequestEditorFn
+func (_e *Api_Expecter) GetHypeTrainStatusWithResponse(ctx interface{}, params interface{}, reqEditors ...interface{}) *Api_GetHypeTrainStatusWithResponse_Call {
+	return &Api_GetHypeTrainStatusWithResponse_Call{Call: _e.mock.On("GetHypeTrainStatusWithResponse",
+		append([]interface{}{ctx, params}, reqEditors...)...)}
+}
+
+func (_c *Api_GetHypeTrainStatusWithResponse_Call) Run(run func(ctx context.Context, params *twitchApi.GetHypeTrainStatusParams, reqEditors ...twitchApi.RequestEditorFn)) *Api_GetHypeTrainStatusWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]twitchApi.RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(twitchApi.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(*twitchApi.GetHypeTrainStatusParams), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Api_GetHypeTrainStatusWithResponse_Call) Return(_a0 *twitchApi.GetHypeTrainStatusHTTPResponse, _a1 error) *Api_GetHypeTrainStatusWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Api_GetHypeTrainStatusWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.GetHypeTrainStatusParams, ...twitchApi.RequestEditorFn) (*twitchApi.GetHypeTrainStatusHTTPResponse, error)) *Api_GetHypeTrainStatusWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetModeratedChannelsWithResponse provides a mock function with given fields: ctx, params, reqEditors
 func (_m *Api) GetModeratedChannelsWithResponse(ctx context.Context, params *twitchApi.GetModeratedChannelsParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.GetModeratedChannelsHTTPResponse, error) {
 	_va := make([]interface{}, len(reqEditors))
