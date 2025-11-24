@@ -23,7 +23,7 @@ jobs:
           cache: false
 
       - name: install make
-        run: sudo apt update; sudo apt-get install build-essential -y
+        run: sudo apt update; sudo apt-get install wget build-essential -y
       - name: Update & regenerate
         run: make gen
       - name: Make sure testbuild still works.
