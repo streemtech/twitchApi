@@ -18,7 +18,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Setup Golang
         id: setup_golang
@@ -41,10 +41,13 @@ jobs:
         with:
           commit_message: "Automated OpenApi YAML Update"
           branch: "main"
+          commit_user_name: GitHub Actions Bot
+          commit_user_email: my-github-actions-bot@example.org
+          commit_author: Author <actions@github.com>
 
       - name: Bump Version Tag.
         id: bump_tag
-        uses: anothrNick/github-tag-action@1.67.0
+        uses: anothrNick/github-tag-action@1.75.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
