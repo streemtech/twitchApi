@@ -112,6 +112,8 @@ type CircuitWrapperClientWithResponsesCircuitConfig struct {
 	CircuitGetAdScheduleWithResponse circuit.Config
 	// CircuitGetAllStreamTagsWithResponse is the configuration used for the GetAllStreamTagsWithResponse circuit. This overrides values set by Defaults
 	CircuitGetAllStreamTagsWithResponse circuit.Config
+	// CircuitGetAuthorizationByUserWithResponse is the configuration used for the GetAuthorizationByUserWithResponse circuit. This overrides values set by Defaults
+	CircuitGetAuthorizationByUserWithResponse circuit.Config
 	// CircuitGetAutomodSettingsWithResponse is the configuration used for the GetAutomodSettingsWithResponse circuit. This overrides values set by Defaults
 	CircuitGetAutomodSettingsWithResponse circuit.Config
 	// CircuitGetBannedUsersWithResponse is the configuration used for the GetBannedUsersWithResponse circuit. This overrides values set by Defaults
@@ -150,6 +152,8 @@ type CircuitWrapperClientWithResponsesCircuitConfig struct {
 	CircuitGetChattersWithResponse circuit.Config
 	// CircuitGetCheermotesWithResponse is the configuration used for the GetCheermotesWithResponse circuit. This overrides values set by Defaults
 	CircuitGetCheermotesWithResponse circuit.Config
+	// CircuitGetClipsDownloadWithResponse is the configuration used for the GetClipsDownloadWithResponse circuit. This overrides values set by Defaults
+	CircuitGetClipsDownloadWithResponse circuit.Config
 	// CircuitGetClipsWithResponse is the configuration used for the GetClipsWithResponse circuit. This overrides values set by Defaults
 	CircuitGetClipsWithResponse circuit.Config
 	// CircuitGetConduitShardsWithResponse is the configuration used for the GetConduitShardsWithResponse circuit. This overrides values set by Defaults
@@ -475,6 +479,8 @@ type CircuitWrapperClientWithResponsesCircuit struct {
 	CircuitGetAdScheduleWithResponse *circuit.Circuit
 	// CircuitGetAllStreamTagsWithResponse is the circuit for method GetAllStreamTagsWithResponse
 	CircuitGetAllStreamTagsWithResponse *circuit.Circuit
+	// CircuitGetAuthorizationByUserWithResponse is the circuit for method GetAuthorizationByUserWithResponse
+	CircuitGetAuthorizationByUserWithResponse *circuit.Circuit
 	// CircuitGetAutomodSettingsWithResponse is the circuit for method GetAutomodSettingsWithResponse
 	CircuitGetAutomodSettingsWithResponse *circuit.Circuit
 	// CircuitGetBannedUsersWithResponse is the circuit for method GetBannedUsersWithResponse
@@ -513,6 +519,8 @@ type CircuitWrapperClientWithResponsesCircuit struct {
 	CircuitGetChattersWithResponse *circuit.Circuit
 	// CircuitGetCheermotesWithResponse is the circuit for method GetCheermotesWithResponse
 	CircuitGetCheermotesWithResponse *circuit.Circuit
+	// CircuitGetClipsDownloadWithResponse is the circuit for method GetClipsDownloadWithResponse
+	CircuitGetClipsDownloadWithResponse *circuit.Circuit
 	// CircuitGetClipsWithResponse is the circuit for method GetClipsWithResponse
 	CircuitGetClipsWithResponse *circuit.Circuit
 	// CircuitGetConduitShardsWithResponse is the circuit for method GetConduitShardsWithResponse
@@ -984,6 +992,11 @@ func NewCircuitWrapperClientWithResponsesCircuit(
 		return nil, err
 	}
 
+	w.CircuitGetAuthorizationByUserWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.GetAuthorizationByUserWithResponse", conf.CircuitGetAuthorizationByUserWithResponse, conf.Defaults)
+	if err != nil {
+		return nil, err
+	}
+
 	w.CircuitGetAutomodSettingsWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.GetAutomodSettingsWithResponse", conf.CircuitGetAutomodSettingsWithResponse, conf.Defaults)
 	if err != nil {
 		return nil, err
@@ -1075,6 +1088,11 @@ func NewCircuitWrapperClientWithResponsesCircuit(
 	}
 
 	w.CircuitGetCheermotesWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.GetCheermotesWithResponse", conf.CircuitGetCheermotesWithResponse, conf.Defaults)
+	if err != nil {
+		return nil, err
+	}
+
+	w.CircuitGetClipsDownloadWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.GetClipsDownloadWithResponse", conf.CircuitGetClipsDownloadWithResponse, conf.Defaults)
 	if err != nil {
 		return nil, err
 	}
@@ -3006,6 +3024,37 @@ func (w *CircuitWrapperClientWithResponsesCircuit) GetAllStreamTagsWithResponse(
 	return r0, err
 }
 
+// GetAuthorizationByUserWithResponse calls the embedded ClientWithResponsesInterface's method GetAuthorizationByUserWithResponse with CircuitGetAuthorizationByUserWithResponse
+func (w *CircuitWrapperClientWithResponsesCircuit) GetAuthorizationByUserWithResponse(ctx context.Context, p1 *GetAuthorizationByUserParams, p2 ...RequestEditorFn) (*GetAuthorizationByUserHTTPResponse, error) {
+	var r0 *GetAuthorizationByUserHTTPResponse
+	var skippedErr error
+
+	err := w.CircuitGetAuthorizationByUserWithResponse.Run(ctx, func(ctx context.Context) error {
+		var err error
+		r0, err = w.ClientWithResponsesInterface.GetAuthorizationByUserWithResponse(ctx, p1, p2...)
+
+		if w.ShouldSkipError(err) {
+			skippedErr = err
+			return nil
+		}
+
+		if w.IsBadRequest(err) {
+			return &circuit.SimpleBadRequest{Err: err}
+		}
+		return err
+	})
+
+	if skippedErr != nil {
+		err = skippedErr
+	}
+
+	if berr, ok := err.(*circuit.SimpleBadRequest); ok {
+		err = berr.Err
+	}
+
+	return r0, err
+}
+
 // GetAutomodSettingsWithResponse calls the embedded ClientWithResponsesInterface's method GetAutomodSettingsWithResponse with CircuitGetAutomodSettingsWithResponse
 func (w *CircuitWrapperClientWithResponsesCircuit) GetAutomodSettingsWithResponse(ctx context.Context, p1 *GetAutomodSettingsParams, p2 ...RequestEditorFn) (*GetAutomodSettingsHTTPResponse, error) {
 	var r0 *GetAutomodSettingsHTTPResponse
@@ -3572,6 +3621,37 @@ func (w *CircuitWrapperClientWithResponsesCircuit) GetCheermotesWithResponse(ctx
 	err := w.CircuitGetCheermotesWithResponse.Run(ctx, func(ctx context.Context) error {
 		var err error
 		r0, err = w.ClientWithResponsesInterface.GetCheermotesWithResponse(ctx, p1, p2...)
+
+		if w.ShouldSkipError(err) {
+			skippedErr = err
+			return nil
+		}
+
+		if w.IsBadRequest(err) {
+			return &circuit.SimpleBadRequest{Err: err}
+		}
+		return err
+	})
+
+	if skippedErr != nil {
+		err = skippedErr
+	}
+
+	if berr, ok := err.(*circuit.SimpleBadRequest); ok {
+		err = berr.Err
+	}
+
+	return r0, err
+}
+
+// GetClipsDownloadWithResponse calls the embedded ClientWithResponsesInterface's method GetClipsDownloadWithResponse with CircuitGetClipsDownloadWithResponse
+func (w *CircuitWrapperClientWithResponsesCircuit) GetClipsDownloadWithResponse(ctx context.Context, p1 *GetClipsDownloadParams, p2 ...RequestEditorFn) (*GetClipsDownloadHTTPResponse, error) {
+	var r0 *GetClipsDownloadHTTPResponse
+	var skippedErr error
+
+	err := w.CircuitGetClipsDownloadWithResponse.Run(ctx, func(ctx context.Context) error {
+		var err error
+		r0, err = w.ClientWithResponsesInterface.GetClipsDownloadWithResponse(ctx, p1, p2...)
 
 		if w.ShouldSkipError(err) {
 			skippedErr = err

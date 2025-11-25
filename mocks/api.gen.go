@@ -3302,6 +3302,80 @@ func (_c *Api_GetAllStreamTagsWithResponse_Call) RunAndReturn(run func(context.C
 	return _c
 }
 
+// GetAuthorizationByUserWithResponse provides a mock function with given fields: ctx, params, reqEditors
+func (_m *Api) GetAuthorizationByUserWithResponse(ctx context.Context, params *twitchApi.GetAuthorizationByUserParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.GetAuthorizationByUserHTTPResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, params)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAuthorizationByUserWithResponse")
+	}
+
+	var r0 *twitchApi.GetAuthorizationByUserHTTPResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.GetAuthorizationByUserParams, ...twitchApi.RequestEditorFn) (*twitchApi.GetAuthorizationByUserHTTPResponse, error)); ok {
+		return rf(ctx, params, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.GetAuthorizationByUserParams, ...twitchApi.RequestEditorFn) *twitchApi.GetAuthorizationByUserHTTPResponse); ok {
+		r0 = rf(ctx, params, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*twitchApi.GetAuthorizationByUserHTTPResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *twitchApi.GetAuthorizationByUserParams, ...twitchApi.RequestEditorFn) error); ok {
+		r1 = rf(ctx, params, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Api_GetAuthorizationByUserWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAuthorizationByUserWithResponse'
+type Api_GetAuthorizationByUserWithResponse_Call struct {
+	*mock.Call
+}
+
+// GetAuthorizationByUserWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - params *twitchApi.GetAuthorizationByUserParams
+//   - reqEditors ...twitchApi.RequestEditorFn
+func (_e *Api_Expecter) GetAuthorizationByUserWithResponse(ctx interface{}, params interface{}, reqEditors ...interface{}) *Api_GetAuthorizationByUserWithResponse_Call {
+	return &Api_GetAuthorizationByUserWithResponse_Call{Call: _e.mock.On("GetAuthorizationByUserWithResponse",
+		append([]interface{}{ctx, params}, reqEditors...)...)}
+}
+
+func (_c *Api_GetAuthorizationByUserWithResponse_Call) Run(run func(ctx context.Context, params *twitchApi.GetAuthorizationByUserParams, reqEditors ...twitchApi.RequestEditorFn)) *Api_GetAuthorizationByUserWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]twitchApi.RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(twitchApi.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(*twitchApi.GetAuthorizationByUserParams), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Api_GetAuthorizationByUserWithResponse_Call) Return(_a0 *twitchApi.GetAuthorizationByUserHTTPResponse, _a1 error) *Api_GetAuthorizationByUserWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Api_GetAuthorizationByUserWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.GetAuthorizationByUserParams, ...twitchApi.RequestEditorFn) (*twitchApi.GetAuthorizationByUserHTTPResponse, error)) *Api_GetAuthorizationByUserWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetAutomodSettingsWithResponse provides a mock function with given fields: ctx, params, reqEditors
 func (_m *Api) GetAutomodSettingsWithResponse(ctx context.Context, params *twitchApi.GetAutomodSettingsParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.GetAutomodSettingsHTTPResponse, error) {
 	_va := make([]interface{}, len(reqEditors))
@@ -4704,6 +4778,80 @@ func (_c *Api_GetCheermotesWithResponse_Call) Return(_a0 *twitchApi.GetCheermote
 }
 
 func (_c *Api_GetCheermotesWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.GetCheermotesParams, ...twitchApi.RequestEditorFn) (*twitchApi.GetCheermotesHTTPResponse, error)) *Api_GetCheermotesWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetClipsDownloadWithResponse provides a mock function with given fields: ctx, params, reqEditors
+func (_m *Api) GetClipsDownloadWithResponse(ctx context.Context, params *twitchApi.GetClipsDownloadParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.GetClipsDownloadHTTPResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, params)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetClipsDownloadWithResponse")
+	}
+
+	var r0 *twitchApi.GetClipsDownloadHTTPResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.GetClipsDownloadParams, ...twitchApi.RequestEditorFn) (*twitchApi.GetClipsDownloadHTTPResponse, error)); ok {
+		return rf(ctx, params, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.GetClipsDownloadParams, ...twitchApi.RequestEditorFn) *twitchApi.GetClipsDownloadHTTPResponse); ok {
+		r0 = rf(ctx, params, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*twitchApi.GetClipsDownloadHTTPResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *twitchApi.GetClipsDownloadParams, ...twitchApi.RequestEditorFn) error); ok {
+		r1 = rf(ctx, params, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Api_GetClipsDownloadWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetClipsDownloadWithResponse'
+type Api_GetClipsDownloadWithResponse_Call struct {
+	*mock.Call
+}
+
+// GetClipsDownloadWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - params *twitchApi.GetClipsDownloadParams
+//   - reqEditors ...twitchApi.RequestEditorFn
+func (_e *Api_Expecter) GetClipsDownloadWithResponse(ctx interface{}, params interface{}, reqEditors ...interface{}) *Api_GetClipsDownloadWithResponse_Call {
+	return &Api_GetClipsDownloadWithResponse_Call{Call: _e.mock.On("GetClipsDownloadWithResponse",
+		append([]interface{}{ctx, params}, reqEditors...)...)}
+}
+
+func (_c *Api_GetClipsDownloadWithResponse_Call) Run(run func(ctx context.Context, params *twitchApi.GetClipsDownloadParams, reqEditors ...twitchApi.RequestEditorFn)) *Api_GetClipsDownloadWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]twitchApi.RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(twitchApi.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(*twitchApi.GetClipsDownloadParams), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Api_GetClipsDownloadWithResponse_Call) Return(_a0 *twitchApi.GetClipsDownloadHTTPResponse, _a1 error) *Api_GetClipsDownloadWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Api_GetClipsDownloadWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.GetClipsDownloadParams, ...twitchApi.RequestEditorFn) (*twitchApi.GetClipsDownloadHTTPResponse, error)) *Api_GetClipsDownloadWithResponse_Call {
 	_c.Call.Return(run)
 	return _c
 }
