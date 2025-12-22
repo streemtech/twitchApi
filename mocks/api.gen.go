@@ -1072,6 +1072,80 @@ func (_c *Api_CreateChannelStreamScheduleSegmentWithResponse_Call) RunAndReturn(
 	return _c
 }
 
+// CreateClipFromVodWithResponse provides a mock function with given fields: ctx, params, reqEditors
+func (_m *Api) CreateClipFromVodWithResponse(ctx context.Context, params *twitchApi.CreateClipFromVodParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.CreateClipFromVodHTTPResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, params)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateClipFromVodWithResponse")
+	}
+
+	var r0 *twitchApi.CreateClipFromVodHTTPResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.CreateClipFromVodParams, ...twitchApi.RequestEditorFn) (*twitchApi.CreateClipFromVodHTTPResponse, error)); ok {
+		return rf(ctx, params, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.CreateClipFromVodParams, ...twitchApi.RequestEditorFn) *twitchApi.CreateClipFromVodHTTPResponse); ok {
+		r0 = rf(ctx, params, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*twitchApi.CreateClipFromVodHTTPResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *twitchApi.CreateClipFromVodParams, ...twitchApi.RequestEditorFn) error); ok {
+		r1 = rf(ctx, params, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Api_CreateClipFromVodWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateClipFromVodWithResponse'
+type Api_CreateClipFromVodWithResponse_Call struct {
+	*mock.Call
+}
+
+// CreateClipFromVodWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - params *twitchApi.CreateClipFromVodParams
+//   - reqEditors ...twitchApi.RequestEditorFn
+func (_e *Api_Expecter) CreateClipFromVodWithResponse(ctx interface{}, params interface{}, reqEditors ...interface{}) *Api_CreateClipFromVodWithResponse_Call {
+	return &Api_CreateClipFromVodWithResponse_Call{Call: _e.mock.On("CreateClipFromVodWithResponse",
+		append([]interface{}{ctx, params}, reqEditors...)...)}
+}
+
+func (_c *Api_CreateClipFromVodWithResponse_Call) Run(run func(ctx context.Context, params *twitchApi.CreateClipFromVodParams, reqEditors ...twitchApi.RequestEditorFn)) *Api_CreateClipFromVodWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]twitchApi.RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(twitchApi.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(*twitchApi.CreateClipFromVodParams), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Api_CreateClipFromVodWithResponse_Call) Return(_a0 *twitchApi.CreateClipFromVodHTTPResponse, _a1 error) *Api_CreateClipFromVodWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Api_CreateClipFromVodWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.CreateClipFromVodParams, ...twitchApi.RequestEditorFn) (*twitchApi.CreateClipFromVodHTTPResponse, error)) *Api_CreateClipFromVodWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateClipWithResponse provides a mock function with given fields: ctx, params, reqEditors
 func (_m *Api) CreateClipWithResponse(ctx context.Context, params *twitchApi.CreateClipParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.CreateClipHTTPResponse, error) {
 	_va := make([]interface{}, len(reqEditors))

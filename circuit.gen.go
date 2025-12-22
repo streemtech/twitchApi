@@ -52,6 +52,8 @@ type CircuitWrapperClientWithResponsesCircuitConfig struct {
 	CircuitCreateChannelStreamScheduleSegmentWithBodyWithResponse circuit.Config
 	// CircuitCreateChannelStreamScheduleSegmentWithResponse is the configuration used for the CreateChannelStreamScheduleSegmentWithResponse circuit. This overrides values set by Defaults
 	CircuitCreateChannelStreamScheduleSegmentWithResponse circuit.Config
+	// CircuitCreateClipFromVodWithResponse is the configuration used for the CreateClipFromVodWithResponse circuit. This overrides values set by Defaults
+	CircuitCreateClipFromVodWithResponse circuit.Config
 	// CircuitCreateClipWithResponse is the configuration used for the CreateClipWithResponse circuit. This overrides values set by Defaults
 	CircuitCreateClipWithResponse circuit.Config
 	// CircuitCreateConduitsWithBodyWithResponse is the configuration used for the CreateConduitsWithBodyWithResponse circuit. This overrides values set by Defaults
@@ -419,6 +421,8 @@ type CircuitWrapperClientWithResponsesCircuit struct {
 	CircuitCreateChannelStreamScheduleSegmentWithBodyWithResponse *circuit.Circuit
 	// CircuitCreateChannelStreamScheduleSegmentWithResponse is the circuit for method CreateChannelStreamScheduleSegmentWithResponse
 	CircuitCreateChannelStreamScheduleSegmentWithResponse *circuit.Circuit
+	// CircuitCreateClipFromVodWithResponse is the circuit for method CreateClipFromVodWithResponse
+	CircuitCreateClipFromVodWithResponse *circuit.Circuit
 	// CircuitCreateClipWithResponse is the circuit for method CreateClipWithResponse
 	CircuitCreateClipWithResponse *circuit.Circuit
 	// CircuitCreateConduitsWithBodyWithResponse is the circuit for method CreateConduitsWithBodyWithResponse
@@ -838,6 +842,11 @@ func NewCircuitWrapperClientWithResponsesCircuit(
 	}
 
 	w.CircuitCreateChannelStreamScheduleSegmentWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.CreateChannelStreamScheduleSegmentWithResponse", conf.CircuitCreateChannelStreamScheduleSegmentWithResponse, conf.Defaults)
+	if err != nil {
+		return nil, err
+	}
+
+	w.CircuitCreateClipFromVodWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.CreateClipFromVodWithResponse", conf.CircuitCreateClipFromVodWithResponse, conf.Defaults)
 	if err != nil {
 		return nil, err
 	}
@@ -2071,6 +2080,37 @@ func (w *CircuitWrapperClientWithResponsesCircuit) CreateChannelStreamScheduleSe
 	err := w.CircuitCreateChannelStreamScheduleSegmentWithResponse.Run(ctx, func(ctx context.Context) error {
 		var err error
 		r0, err = w.ClientWithResponsesInterface.CreateChannelStreamScheduleSegmentWithResponse(ctx, p1, p2, p3...)
+
+		if w.ShouldSkipError(err) {
+			skippedErr = err
+			return nil
+		}
+
+		if w.IsBadRequest(err) {
+			return &circuit.SimpleBadRequest{Err: err}
+		}
+		return err
+	})
+
+	if skippedErr != nil {
+		err = skippedErr
+	}
+
+	if berr, ok := err.(*circuit.SimpleBadRequest); ok {
+		err = berr.Err
+	}
+
+	return r0, err
+}
+
+// CreateClipFromVodWithResponse calls the embedded ClientWithResponsesInterface's method CreateClipFromVodWithResponse with CircuitCreateClipFromVodWithResponse
+func (w *CircuitWrapperClientWithResponsesCircuit) CreateClipFromVodWithResponse(ctx context.Context, p1 *CreateClipFromVodParams, p2 ...RequestEditorFn) (*CreateClipFromVodHTTPResponse, error) {
+	var r0 *CreateClipFromVodHTTPResponse
+	var skippedErr error
+
+	err := w.CircuitCreateClipFromVodWithResponse.Run(ctx, func(ctx context.Context) error {
+		var err error
+		r0, err = w.ClientWithResponsesInterface.CreateClipFromVodWithResponse(ctx, p1, p2...)
 
 		if w.ShouldSkipError(err) {
 			skippedErr = err
