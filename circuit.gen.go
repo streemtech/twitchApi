@@ -32,6 +32,10 @@ type CircuitWrapperClientWithResponsesCircuitConfig struct {
 	CircuitAddChannelModeratorWithResponse circuit.Config
 	// CircuitAddChannelVipWithResponse is the configuration used for the AddChannelVipWithResponse circuit. This overrides values set by Defaults
 	CircuitAddChannelVipWithResponse circuit.Config
+	// CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse is the configuration used for the AddSuspiciousStatusToChatUserWithBodyWithResponse circuit. This overrides values set by Defaults
+	CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse circuit.Config
+	// CircuitAddSuspiciousStatusToChatUserWithResponse is the configuration used for the AddSuspiciousStatusToChatUserWithResponse circuit. This overrides values set by Defaults
+	CircuitAddSuspiciousStatusToChatUserWithResponse circuit.Config
 	// CircuitAssignGuestStarSlotWithResponse is the configuration used for the AssignGuestStarSlotWithResponse circuit. This overrides values set by Defaults
 	CircuitAssignGuestStarSlotWithResponse circuit.Config
 	// CircuitBanUserWithBodyWithResponse is the configuration used for the BanUserWithBodyWithResponse circuit. This overrides values set by Defaults
@@ -268,6 +272,8 @@ type CircuitWrapperClientWithResponsesCircuitConfig struct {
 	CircuitRemoveChannelModeratorWithResponse circuit.Config
 	// CircuitRemoveChannelVipWithResponse is the configuration used for the RemoveChannelVipWithResponse circuit. This overrides values set by Defaults
 	CircuitRemoveChannelVipWithResponse circuit.Config
+	// CircuitRemoveSuspiciousStatusFromChatUserWithResponse is the configuration used for the RemoveSuspiciousStatusFromChatUserWithResponse circuit. This overrides values set by Defaults
+	CircuitRemoveSuspiciousStatusFromChatUserWithResponse circuit.Config
 	// CircuitResolveUnbanRequestsWithResponse is the configuration used for the ResolveUnbanRequestsWithResponse circuit. This overrides values set by Defaults
 	CircuitResolveUnbanRequestsWithResponse circuit.Config
 	// CircuitSearchCategoriesWithResponse is the configuration used for the SearchCategoriesWithResponse circuit. This overrides values set by Defaults
@@ -401,6 +407,10 @@ type CircuitWrapperClientWithResponsesCircuit struct {
 	CircuitAddChannelModeratorWithResponse *circuit.Circuit
 	// CircuitAddChannelVipWithResponse is the circuit for method AddChannelVipWithResponse
 	CircuitAddChannelVipWithResponse *circuit.Circuit
+	// CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse is the circuit for method AddSuspiciousStatusToChatUserWithBodyWithResponse
+	CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse *circuit.Circuit
+	// CircuitAddSuspiciousStatusToChatUserWithResponse is the circuit for method AddSuspiciousStatusToChatUserWithResponse
+	CircuitAddSuspiciousStatusToChatUserWithResponse *circuit.Circuit
 	// CircuitAssignGuestStarSlotWithResponse is the circuit for method AssignGuestStarSlotWithResponse
 	CircuitAssignGuestStarSlotWithResponse *circuit.Circuit
 	// CircuitBanUserWithBodyWithResponse is the circuit for method BanUserWithBodyWithResponse
@@ -637,6 +647,8 @@ type CircuitWrapperClientWithResponsesCircuit struct {
 	CircuitRemoveChannelModeratorWithResponse *circuit.Circuit
 	// CircuitRemoveChannelVipWithResponse is the circuit for method RemoveChannelVipWithResponse
 	CircuitRemoveChannelVipWithResponse *circuit.Circuit
+	// CircuitRemoveSuspiciousStatusFromChatUserWithResponse is the circuit for method RemoveSuspiciousStatusFromChatUserWithResponse
+	CircuitRemoveSuspiciousStatusFromChatUserWithResponse *circuit.Circuit
 	// CircuitResolveUnbanRequestsWithResponse is the circuit for method ResolveUnbanRequestsWithResponse
 	CircuitResolveUnbanRequestsWithResponse *circuit.Circuit
 	// CircuitSearchCategoriesWithResponse is the circuit for method SearchCategoriesWithResponse
@@ -792,6 +804,16 @@ func NewCircuitWrapperClientWithResponsesCircuit(
 	}
 
 	w.CircuitAddChannelVipWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.AddChannelVipWithResponse", conf.CircuitAddChannelVipWithResponse, conf.Defaults)
+	if err != nil {
+		return nil, err
+	}
+
+	w.CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.AddSuspiciousStatusToChatUserWithBodyWithResponse", conf.CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse, conf.Defaults)
+	if err != nil {
+		return nil, err
+	}
+
+	w.CircuitAddSuspiciousStatusToChatUserWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.AddSuspiciousStatusToChatUserWithResponse", conf.CircuitAddSuspiciousStatusToChatUserWithResponse, conf.Defaults)
 	if err != nil {
 		return nil, err
 	}
@@ -1386,6 +1408,11 @@ func NewCircuitWrapperClientWithResponsesCircuit(
 		return nil, err
 	}
 
+	w.CircuitRemoveSuspiciousStatusFromChatUserWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.RemoveSuspiciousStatusFromChatUserWithResponse", conf.CircuitRemoveSuspiciousStatusFromChatUserWithResponse, conf.Defaults)
+	if err != nil {
+		return nil, err
+	}
+
 	w.CircuitResolveUnbanRequestsWithResponse, err = manager.CreateCircuit(conf.Prefix+"ClientWithResponsesCircuit.ResolveUnbanRequestsWithResponse", conf.CircuitResolveUnbanRequestsWithResponse, conf.Defaults)
 	if err != nil {
 		return nil, err
@@ -1770,6 +1797,68 @@ func (w *CircuitWrapperClientWithResponsesCircuit) AddChannelVipWithResponse(ctx
 	err := w.CircuitAddChannelVipWithResponse.Run(ctx, func(ctx context.Context) error {
 		var err error
 		r0, err = w.ClientWithResponsesInterface.AddChannelVipWithResponse(ctx, p1, p2...)
+
+		if w.ShouldSkipError(err) {
+			skippedErr = err
+			return nil
+		}
+
+		if w.IsBadRequest(err) {
+			return &circuit.SimpleBadRequest{Err: err}
+		}
+		return err
+	})
+
+	if skippedErr != nil {
+		err = skippedErr
+	}
+
+	if berr, ok := err.(*circuit.SimpleBadRequest); ok {
+		err = berr.Err
+	}
+
+	return r0, err
+}
+
+// AddSuspiciousStatusToChatUserWithBodyWithResponse calls the embedded ClientWithResponsesInterface's method AddSuspiciousStatusToChatUserWithBodyWithResponse with CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse
+func (w *CircuitWrapperClientWithResponsesCircuit) AddSuspiciousStatusToChatUserWithBodyWithResponse(ctx context.Context, p1 *AddSuspiciousStatusToChatUserParams, p2 string, p3 io.Reader, p4 ...RequestEditorFn) (*AddSuspiciousStatusToChatUserHTTPResponse, error) {
+	var r0 *AddSuspiciousStatusToChatUserHTTPResponse
+	var skippedErr error
+
+	err := w.CircuitAddSuspiciousStatusToChatUserWithBodyWithResponse.Run(ctx, func(ctx context.Context) error {
+		var err error
+		r0, err = w.ClientWithResponsesInterface.AddSuspiciousStatusToChatUserWithBodyWithResponse(ctx, p1, p2, p3, p4...)
+
+		if w.ShouldSkipError(err) {
+			skippedErr = err
+			return nil
+		}
+
+		if w.IsBadRequest(err) {
+			return &circuit.SimpleBadRequest{Err: err}
+		}
+		return err
+	})
+
+	if skippedErr != nil {
+		err = skippedErr
+	}
+
+	if berr, ok := err.(*circuit.SimpleBadRequest); ok {
+		err = berr.Err
+	}
+
+	return r0, err
+}
+
+// AddSuspiciousStatusToChatUserWithResponse calls the embedded ClientWithResponsesInterface's method AddSuspiciousStatusToChatUserWithResponse with CircuitAddSuspiciousStatusToChatUserWithResponse
+func (w *CircuitWrapperClientWithResponsesCircuit) AddSuspiciousStatusToChatUserWithResponse(ctx context.Context, p1 *AddSuspiciousStatusToChatUserParams, p2 AddSuspiciousStatusToChatUserBody, p3 ...RequestEditorFn) (*AddSuspiciousStatusToChatUserHTTPResponse, error) {
+	var r0 *AddSuspiciousStatusToChatUserHTTPResponse
+	var skippedErr error
+
+	err := w.CircuitAddSuspiciousStatusToChatUserWithResponse.Run(ctx, func(ctx context.Context) error {
+		var err error
+		r0, err = w.ClientWithResponsesInterface.AddSuspiciousStatusToChatUserWithResponse(ctx, p1, p2, p3...)
 
 		if w.ShouldSkipError(err) {
 			skippedErr = err
@@ -5428,6 +5517,37 @@ func (w *CircuitWrapperClientWithResponsesCircuit) RemoveChannelVipWithResponse(
 	err := w.CircuitRemoveChannelVipWithResponse.Run(ctx, func(ctx context.Context) error {
 		var err error
 		r0, err = w.ClientWithResponsesInterface.RemoveChannelVipWithResponse(ctx, p1, p2...)
+
+		if w.ShouldSkipError(err) {
+			skippedErr = err
+			return nil
+		}
+
+		if w.IsBadRequest(err) {
+			return &circuit.SimpleBadRequest{Err: err}
+		}
+		return err
+	})
+
+	if skippedErr != nil {
+		err = skippedErr
+	}
+
+	if berr, ok := err.(*circuit.SimpleBadRequest); ok {
+		err = berr.Err
+	}
+
+	return r0, err
+}
+
+// RemoveSuspiciousStatusFromChatUserWithResponse calls the embedded ClientWithResponsesInterface's method RemoveSuspiciousStatusFromChatUserWithResponse with CircuitRemoveSuspiciousStatusFromChatUserWithResponse
+func (w *CircuitWrapperClientWithResponsesCircuit) RemoveSuspiciousStatusFromChatUserWithResponse(ctx context.Context, p1 *RemoveSuspiciousStatusFromChatUserParams, p2 ...RequestEditorFn) (*RemoveSuspiciousStatusFromChatUserHTTPResponse, error) {
+	var r0 *RemoveSuspiciousStatusFromChatUserHTTPResponse
+	var skippedErr error
+
+	err := w.CircuitRemoveSuspiciousStatusFromChatUserWithResponse.Run(ctx, func(ctx context.Context) error {
+		var err error
+		r0, err = w.ClientWithResponsesInterface.RemoveSuspiciousStatusFromChatUserWithResponse(ctx, p1, p2...)
 
 		if w.ShouldSkipError(err) {
 			skippedErr = err

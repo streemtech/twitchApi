@@ -323,6 +323,157 @@ func (_c *Api_AddChannelVipWithResponse_Call) RunAndReturn(run func(context.Cont
 	return _c
 }
 
+// AddSuspiciousStatusToChatUserWithBodyWithResponse provides a mock function with given fields: ctx, params, contentType, body, reqEditors
+func (_m *Api) AddSuspiciousStatusToChatUserWithBodyWithResponse(ctx context.Context, params *twitchApi.AddSuspiciousStatusToChatUserParams, contentType string, body io.Reader, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, params, contentType, body)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for AddSuspiciousStatusToChatUserWithBodyWithResponse")
+	}
+
+	var r0 *twitchApi.AddSuspiciousStatusToChatUserHTTPResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, string, io.Reader, ...twitchApi.RequestEditorFn) (*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, error)); ok {
+		return rf(ctx, params, contentType, body, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, string, io.Reader, ...twitchApi.RequestEditorFn) *twitchApi.AddSuspiciousStatusToChatUserHTTPResponse); ok {
+		r0 = rf(ctx, params, contentType, body, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, string, io.Reader, ...twitchApi.RequestEditorFn) error); ok {
+		r1 = rf(ctx, params, contentType, body, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AddSuspiciousStatusToChatUserWithBodyWithResponse'
+type Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call struct {
+	*mock.Call
+}
+
+// AddSuspiciousStatusToChatUserWithBodyWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - params *twitchApi.AddSuspiciousStatusToChatUserParams
+//   - contentType string
+//   - body io.Reader
+//   - reqEditors ...twitchApi.RequestEditorFn
+func (_e *Api_Expecter) AddSuspiciousStatusToChatUserWithBodyWithResponse(ctx interface{}, params interface{}, contentType interface{}, body interface{}, reqEditors ...interface{}) *Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call {
+	return &Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call{Call: _e.mock.On("AddSuspiciousStatusToChatUserWithBodyWithResponse",
+		append([]interface{}{ctx, params, contentType, body}, reqEditors...)...)}
+}
+
+func (_c *Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call) Run(run func(ctx context.Context, params *twitchApi.AddSuspiciousStatusToChatUserParams, contentType string, body io.Reader, reqEditors ...twitchApi.RequestEditorFn)) *Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]twitchApi.RequestEditorFn, len(args)-4)
+		for i, a := range args[4:] {
+			if a != nil {
+				variadicArgs[i] = a.(twitchApi.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(*twitchApi.AddSuspiciousStatusToChatUserParams), args[2].(string), args[3].(io.Reader), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call) Return(_a0 *twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, _a1 error) *Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, string, io.Reader, ...twitchApi.RequestEditorFn) (*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, error)) *Api_AddSuspiciousStatusToChatUserWithBodyWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// AddSuspiciousStatusToChatUserWithResponse provides a mock function with given fields: ctx, params, body, reqEditors
+func (_m *Api) AddSuspiciousStatusToChatUserWithResponse(ctx context.Context, params *twitchApi.AddSuspiciousStatusToChatUserParams, body twitchApi.AddSuspiciousStatusToChatUserBody, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, params, body)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for AddSuspiciousStatusToChatUserWithResponse")
+	}
+
+	var r0 *twitchApi.AddSuspiciousStatusToChatUserHTTPResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, twitchApi.AddSuspiciousStatusToChatUserBody, ...twitchApi.RequestEditorFn) (*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, error)); ok {
+		return rf(ctx, params, body, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, twitchApi.AddSuspiciousStatusToChatUserBody, ...twitchApi.RequestEditorFn) *twitchApi.AddSuspiciousStatusToChatUserHTTPResponse); ok {
+		r0 = rf(ctx, params, body, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, twitchApi.AddSuspiciousStatusToChatUserBody, ...twitchApi.RequestEditorFn) error); ok {
+		r1 = rf(ctx, params, body, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Api_AddSuspiciousStatusToChatUserWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AddSuspiciousStatusToChatUserWithResponse'
+type Api_AddSuspiciousStatusToChatUserWithResponse_Call struct {
+	*mock.Call
+}
+
+// AddSuspiciousStatusToChatUserWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - params *twitchApi.AddSuspiciousStatusToChatUserParams
+//   - body twitchApi.AddSuspiciousStatusToChatUserBody
+//   - reqEditors ...twitchApi.RequestEditorFn
+func (_e *Api_Expecter) AddSuspiciousStatusToChatUserWithResponse(ctx interface{}, params interface{}, body interface{}, reqEditors ...interface{}) *Api_AddSuspiciousStatusToChatUserWithResponse_Call {
+	return &Api_AddSuspiciousStatusToChatUserWithResponse_Call{Call: _e.mock.On("AddSuspiciousStatusToChatUserWithResponse",
+		append([]interface{}{ctx, params, body}, reqEditors...)...)}
+}
+
+func (_c *Api_AddSuspiciousStatusToChatUserWithResponse_Call) Run(run func(ctx context.Context, params *twitchApi.AddSuspiciousStatusToChatUserParams, body twitchApi.AddSuspiciousStatusToChatUserBody, reqEditors ...twitchApi.RequestEditorFn)) *Api_AddSuspiciousStatusToChatUserWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]twitchApi.RequestEditorFn, len(args)-3)
+		for i, a := range args[3:] {
+			if a != nil {
+				variadicArgs[i] = a.(twitchApi.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(*twitchApi.AddSuspiciousStatusToChatUserParams), args[2].(twitchApi.AddSuspiciousStatusToChatUserBody), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Api_AddSuspiciousStatusToChatUserWithResponse_Call) Return(_a0 *twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, _a1 error) *Api_AddSuspiciousStatusToChatUserWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Api_AddSuspiciousStatusToChatUserWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.AddSuspiciousStatusToChatUserParams, twitchApi.AddSuspiciousStatusToChatUserBody, ...twitchApi.RequestEditorFn) (*twitchApi.AddSuspiciousStatusToChatUserHTTPResponse, error)) *Api_AddSuspiciousStatusToChatUserWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // AssignGuestStarSlotWithResponse provides a mock function with given fields: ctx, params, reqEditors
 func (_m *Api) AssignGuestStarSlotWithResponse(ctx context.Context, params *twitchApi.AssignGuestStarSlotParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.AssignGuestStarSlotHTTPResponse, error) {
 	_va := make([]interface{}, len(reqEditors))
@@ -9069,6 +9220,80 @@ func (_c *Api_RemoveChannelVipWithResponse_Call) Return(_a0 *twitchApi.RemoveCha
 }
 
 func (_c *Api_RemoveChannelVipWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.RemoveChannelVipParams, ...twitchApi.RequestEditorFn) (*twitchApi.RemoveChannelVipHTTPResponse, error)) *Api_RemoveChannelVipWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// RemoveSuspiciousStatusFromChatUserWithResponse provides a mock function with given fields: ctx, params, reqEditors
+func (_m *Api) RemoveSuspiciousStatusFromChatUserWithResponse(ctx context.Context, params *twitchApi.RemoveSuspiciousStatusFromChatUserParams, reqEditors ...twitchApi.RequestEditorFn) (*twitchApi.RemoveSuspiciousStatusFromChatUserHTTPResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, params)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for RemoveSuspiciousStatusFromChatUserWithResponse")
+	}
+
+	var r0 *twitchApi.RemoveSuspiciousStatusFromChatUserHTTPResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.RemoveSuspiciousStatusFromChatUserParams, ...twitchApi.RequestEditorFn) (*twitchApi.RemoveSuspiciousStatusFromChatUserHTTPResponse, error)); ok {
+		return rf(ctx, params, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *twitchApi.RemoveSuspiciousStatusFromChatUserParams, ...twitchApi.RequestEditorFn) *twitchApi.RemoveSuspiciousStatusFromChatUserHTTPResponse); ok {
+		r0 = rf(ctx, params, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*twitchApi.RemoveSuspiciousStatusFromChatUserHTTPResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, *twitchApi.RemoveSuspiciousStatusFromChatUserParams, ...twitchApi.RequestEditorFn) error); ok {
+		r1 = rf(ctx, params, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RemoveSuspiciousStatusFromChatUserWithResponse'
+type Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call struct {
+	*mock.Call
+}
+
+// RemoveSuspiciousStatusFromChatUserWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - params *twitchApi.RemoveSuspiciousStatusFromChatUserParams
+//   - reqEditors ...twitchApi.RequestEditorFn
+func (_e *Api_Expecter) RemoveSuspiciousStatusFromChatUserWithResponse(ctx interface{}, params interface{}, reqEditors ...interface{}) *Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call {
+	return &Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call{Call: _e.mock.On("RemoveSuspiciousStatusFromChatUserWithResponse",
+		append([]interface{}{ctx, params}, reqEditors...)...)}
+}
+
+func (_c *Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call) Run(run func(ctx context.Context, params *twitchApi.RemoveSuspiciousStatusFromChatUserParams, reqEditors ...twitchApi.RequestEditorFn)) *Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]twitchApi.RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(twitchApi.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(*twitchApi.RemoveSuspiciousStatusFromChatUserParams), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call) Return(_a0 *twitchApi.RemoveSuspiciousStatusFromChatUserHTTPResponse, _a1 error) *Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call) RunAndReturn(run func(context.Context, *twitchApi.RemoveSuspiciousStatusFromChatUserParams, ...twitchApi.RequestEditorFn) (*twitchApi.RemoveSuspiciousStatusFromChatUserHTTPResponse, error)) *Api_RemoveSuspiciousStatusFromChatUserWithResponse_Call {
 	_c.Call.Return(run)
 	return _c
 }
